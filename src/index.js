@@ -1,12 +1,12 @@
 import React from 'react';
-import Amplify from 'aws-amplify';
-import config from './aws-exports';
+// import Amplify from 'aws-amplify';
+// import config from './aws-exports';
 // import awsconfig from './aws-exports';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-Amplify.configure(config);
+// Amplify.configure(config);
 // Amplify.configure(awsconfig);
 
 ReactDOM.render(
