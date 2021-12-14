@@ -1,6 +1,5 @@
 import React from 'react';
 import { sortBy } from 'lodash';
-// import logo from './logo.svg';
 import './App.css';
 // import { Authenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
@@ -8,6 +7,9 @@ import Amplify, { API } from 'aws-amplify';
 import { ReactComponent as ArrowUpIcon } from './up-arrow.svg';
 import { ReactComponent as ArrowDownIcon } from './down-arrow.svg';
 import { useParams, Outlet, Link } from "react-router-dom";
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 // import { render } from '@testing-library/react';
 
 export const PortfolioContext = React.createContext();
@@ -105,16 +107,18 @@ function App() {
 
   return (
     <PortfolioContext.Provider value={portfolio}>
-      <div className="App">
-        <header className="App-header">
-          {!params.rowId
-            ? <List list={portfolio} sort={sort} handleSort={handleTickersSort} />
-            : null
-          }
-          <Outlet />
-          <p>Footer 13</p>
-        </header>
-      </div>
+      <Container fluid>
+        {/* <div className="App"> */}
+        {/* <header className="App-header"> */}
+        {!params.rowId
+          ? <List list={portfolio} sort={sort} handleSort={handleTickersSort} />
+          : null
+        }
+        <Outlet />
+        <p>Footer 13</p>
+        {/* </header> */}
+        {/* </div> */}
+      </Container>
     </PortfolioContext.Provider>
   );
 }
@@ -137,9 +141,10 @@ const List = ({ list, sort, handleSort }) => {
 
   return (
     <div>
-      <h1>Portfolio Tickers List</h1>
-      <div>
-        <span style={{ width: '40%' }}>
+      <Container fluid>
+        <Row><Col><h1>Portfolio Tickers List</h1></Col></Row>
+        {/* <div> */}
+        <Row><Col><span style={{ width: '40%' }}>
           <button type="button" onClick={() => handleSort('TICKER')}>
             Ticker
             {sort.sortKey === 'TICKER' && !sort.isReverse ? (
@@ -148,29 +153,31 @@ const List = ({ list, sort, handleSort }) => {
               <ArrowDownIcon height="12px" width="12px" />) : (<span></span>)}
           </button>
         </span>
-        <span style={{ width: '30%' }}>
-          <button type="button" onClick={() => handleSort('TYPE')}>
-            Type
-            {sort.sortKey === 'TYPE' && !sort.isReverse ? (
-              <ArrowUpIcon height="12px" width="12px" />) : (<span></span>)}
-            {sort.sortKey === 'TYPE' && sort.isReverse ? (
-              <ArrowDownIcon height="12px" width="12px" />) : (<span></span>)}
-          </button>
-        </span>
-      </div>
+          <span style={{ width: '30%' }}>
+            <button type="button" onClick={() => handleSort('TYPE')}>
+              Type
+              {sort.sortKey === 'TYPE' && !sort.isReverse ? (
+                <ArrowUpIcon height="12px" width="12px" />) : (<span></span>)}
+              {sort.sortKey === 'TYPE' && sort.isReverse ? (
+                <ArrowDownIcon height="12px" width="12px" />) : (<span></span>)}
+            </button>
+          </span></Col></Row>
 
-      {sortedList.map((item) => (
-        // <Item
-        //   key={item.id}
-        //   item={item}
-        // />
-        <div className="item">
-          <span style={{ width: '15%' }}>{item.ticker} </span>
-          <span style={{ width: '20%' }}>{item.type} </span>
-          <span style={{ width: '55%' }}>{item.note} </span>
-          <span style={{ width: '10%' }}><Link to={`${item.id}`} key={item.id}>Charts</Link></span>
-        </div>
-      ))}
+        {/* </div> */}
+
+        {sortedList.map((item) => (
+          // <Item
+          //   key={item.id}
+          //   item={item}
+          // />
+          <div className="item">
+            <span style={{ width: '15%' }}>{item.ticker} </span>
+            <span style={{ width: '20%' }}>{item.type} </span>
+            <span style={{ width: '55%' }}>{item.note} </span>
+            <span style={{ width: '10%' }}><Link to={`${item.id}`} key={item.id}>Charts</Link></span>
+          </div>
+        ))}
+      </Container>
     </div>
   );
 };
