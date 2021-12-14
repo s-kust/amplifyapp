@@ -1,78 +1,26 @@
 import React from 'react';
-import logo from './logo.svg';
+import { sortBy } from 'lodash';
+// import logo from './logo.svg';
 import './App.css';
 // import { Authenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import Amplify, { API } from 'aws-amplify';
-// import awsconfig from './aws-exports';
+import { ReactComponent as ArrowUpIcon } from './up-arrow.svg';
+import { ReactComponent as ArrowDownIcon } from './down-arrow.svg';
+import { useParams, Outlet, Link } from "react-router-dom";
+// import { render } from '@testing-library/react';
 
-let apiCallResult = "123";
+export const PortfolioContext = React.createContext();
 
-class UserComponent extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { apiCallReturn: [] };
-  }
-  componentDidMount() {
-    this.getPortfolioRows();
-  }
-
-  getPortfolioRows() {
-    const apiName = 'PortfolioRows';
-    const path = '/';
-    const myInit = {
-      headers: {},
-      response: true,
-      queryStringParameters: {},
-    };
-    console.log("Call of API.get in getPortfolioRows");
-    API
-      .get(apiName, path, myInit)
-      .then(response => {
-        // console.log("response:");
-        // console.log(response.data.body);
-        apiCallResult = JSON.parse(response.data.body);
-        // console.log("apiCallResult in then:");
-        // console.log(apiCallResult);
-        this.setState({
-          apiCallReturn: apiCallResult
-        });
-        console.log("this.state.apiCallReturn in then after assignment:");
-        console.log(this.state.apiCallReturn);
-      })
-      .catch(error => {
-        console.log(error.response);
-      });
-  }
-  render() {
-    console.log("this.state.apiCallReturn in render:");
-    console.log(this.state.apiCallReturn);
-    console.log(this.state.apiCallReturn.constructor.name);
-    return (
-      <div>
-        <table>
-          <tr>
-            <th>Ticker</th>
-            <th>Type</th>
-            <th>Note</th>
-          </tr>
-          {
-            this.state.apiCallReturn.map(elem => (
-              <tr id={elem[1]}>
-                <td align="left" width="15%">{elem[1]}</td>
-                <td align="left" width="25%">{elem[2]}</td>
-                <td align="left" width="60%">{elem[3]}</td>
-              </tr>
-            ))
-          }
-        </table>
-      </div>
-    );
-  }
-}
-
-function App() {
-
+const getPortfolioRows = () => {
+  const apiName = 'PortfolioRows';
+  const path = '/';
+  const myInit = {
+    headers: {},
+    response: true,
+    queryStringParameters: {},
+  };
+  var apiCallResult;
   Amplify.configure({
     Auth: {},
     API: {
@@ -86,33 +34,146 @@ function App() {
       ]
     }
   });
-  console.log("Before API.configure call")
-  API.configure();
+  apiCallResult = API
+    .get(apiName, path, myInit).then(response => JSON.parse(response.data.body)).catch(error => {
+      console.log(error.response);
+      throw new Error();
+    });
+  return apiCallResult;
+}
 
-  // return (
-  //   <Authenticator>
-  //     {({ signOut, user }) => (
-  //       <div className="App">
-  //         <header className="App-header">
-  //           <img src={logo} className="App-logo" alt="logo" />
-  //           <h1>Hello from v2.1</h1>
-  //           <p>Hey {user.username}, welcome to my channel, with auth!</p>
-  //           <button onClick={signOut}>Sign out</button>
-  //         </header>
-  //       </div>
-  //     )
-  //     }
-  //   </Authenticator>
-  // );
+const transformPortfolio = (listOfLists) => {
+  // console.log("Start function transformPortfolio");
+  // console.log("Function transformPortfolio input:");
+  // console.log(listOfLists);
+  let resultListOfDicts = [];
+  for (var i = 0; i < listOfLists.length; i++) {
+    let portfolioItem = {
+      id: listOfLists[i][0],
+      ticker: listOfLists[i][1],
+      type: listOfLists[i][2],
+      note: listOfLists[i][3],
+      pic1: listOfLists[i][4],
+      pic2: listOfLists[i][5],
+    }
+    // console.log("Iteration result:");
+    // console.log(portfolioItem);
+    resultListOfDicts.push(portfolioItem)
+  }
+  // console.log("Function transformPortfolio output:");
+  // console.log(resultListOfDicts);
+  return resultListOfDicts;
+}
+
+export function getPortfolioRowById(portfolioData, number) {
+  // console.log("Start getPortfolioRowById - number");
+  // console.log(number);
+  console.log("portfolioData - IDs");
+  console.log(portfolioData);
+  // currentPortfolioRows.forEach(myFunction);
+  let result = portfolioData.find(
+    portfolioRow => portfolioRow.id === number
+  );
+  console.log("getPortfolioRowById - result");
+  console.log(result);
+  return result;
+}
+
+function App() {
+
+  const [portfolio, setPortfolio] = React.useState([]);
+  const [sort, setSort] = React.useState({
+    sortKey: 'NONE',
+    isReverse: false,
+  });
+
+  const handleTickersSort = (sortKey) => {
+    const isReverse = sort.sortKey === sortKey && !sort.isReverse;
+
+    setSort({ sortKey, isReverse });
+  };
+
+  React.useEffect(() => {
+    getPortfolioRows()
+      .then(result => transformPortfolio(result))
+      .then(result => setPortfolio(result));
+  }, []);
+
+  console.log("portfolio state before return:");
+  console.log(portfolio);
+  let params = useParams();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <h1>Hello from v2.2</h1>
-        <UserComponent />
-      </header>
-    </div>
+    <PortfolioContext.Provider value={portfolio}>
+      <div className="App">
+        <header className="App-header">
+          {!params.rowId
+            ? <List list={portfolio} sort={sort} handleSort={handleTickersSort} />
+            : null
+          }
+          <Outlet />
+          <p>Footer 13</p>
+        </header>
+      </div>
+    </PortfolioContext.Provider>
   );
 }
+
+const SORTS = {
+  NONE: (list) => list,
+  TICKER: (list) => sortBy(list, 'ticker'),
+  TYPE: (list) => sortBy(list, 'type'),
+};
+
+const List = ({ list, sort, handleSort }) => {
+  console.log("Begin List, list:");
+  console.log(list);
+
+  const sortFunction = SORTS[sort.sortKey];
+
+  const sortedList = sort.isReverse
+    ? sortFunction(list).reverse()
+    : sortFunction(list);
+
+  return (
+    <div>
+      <h1>Portfolio Tickers List</h1>
+      <div>
+        <span style={{ width: '40%' }}>
+          <button type="button" onClick={() => handleSort('TICKER')}>
+            Ticker
+            {sort.sortKey === 'TICKER' && !sort.isReverse ? (
+              <ArrowUpIcon height="12px" width="12px" />) : (<span></span>)}
+            {sort.sortKey === 'TICKER' && sort.isReverse ? (
+              <ArrowDownIcon height="12px" width="12px" />) : (<span></span>)}
+          </button>
+        </span>
+        <span style={{ width: '30%' }}>
+          <button type="button" onClick={() => handleSort('TYPE')}>
+            Type
+            {sort.sortKey === 'TYPE' && !sort.isReverse ? (
+              <ArrowUpIcon height="12px" width="12px" />) : (<span></span>)}
+            {sort.sortKey === 'TYPE' && sort.isReverse ? (
+              <ArrowDownIcon height="12px" width="12px" />) : (<span></span>)}
+          </button>
+        </span>
+      </div>
+
+      {sortedList.map((item) => (
+        // <Item
+        //   key={item.id}
+        //   item={item}
+        // />
+        <div className="item">
+          <span style={{ width: '15%' }}>{item.ticker} </span>
+          <span style={{ width: '20%' }}>{item.type} </span>
+          <span style={{ width: '55%' }}>{item.note} </span>
+          <span style={{ width: '10%' }}><Link to={`${item.id}`} key={item.id}>Charts</Link></span>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 
 export default App;

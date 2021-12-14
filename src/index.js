@@ -1,18 +1,29 @@
 import React from 'react';
-// import Amplify from 'aws-amplify';
-// import config from './aws-exports';
-// import awsconfig from './aws-exports';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-// Amplify.configure(config);
-// Amplify.configure(awsconfig);
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import TickerCharts from "./routes/ticker_charts";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <BrowserRouter>
+    <React.StrictMode>
+      <Routes>
+        <Route path="/" element={<App />} >
+          <Route path=":rowId" element={<TickerCharts />} />
+          <Route
+            path="*"
+            element={
+              <main style={{ padding: "1rem" }}>
+                <p>There's nothing here!</p>
+              </main>
+            }
+          />
+        </Route>
+      </Routes>
+    </React.StrictMode>,
+  </BrowserRouter>,
   document.getElementById('root')
 );
 
