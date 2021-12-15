@@ -12,6 +12,10 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
+import ListGroup from 'react-bootstrap/ListGroup';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
 // import { render } from '@testing-library/react';
 
 export const PortfolioContext = React.createContext();
@@ -110,16 +114,44 @@ function App() {
   return (
     <PortfolioContext.Provider value={portfolio}>
       <Container fluid>
-        {/* <div className="App"> */}
-        {/* <header className="App-header"> */}
+        <Row><Col>
+          <Navbar bg="light" variant="light">
+            <Container>
+              <Nav>
+                <Nav.Item><Nav.Link href="/">Homepage</Nav.Link></Nav.Item>
+                <Nav.Item><Nav.Link href="https://charts-public.s3.amazonaws.com/Serhii-Kushchenko-CV.pdf">CV download (PDF)</Nav.Link></Nav.Item>
+                <Nav.Item><Nav.Link href="https://github.com/s-kust/">My GitHub</Nav.Link></Nav.Item>
+                <Nav.Item><Nav.Link href="https://www.linkedin.com/in/kushchenko/">LinkedIn profile</Nav.Link></Nav.Item>
+                <Nav.Item><Nav.Link href="https://stackoverflow.com/users/3139228/serhii-kushchenko">Stack Overflow profile</Nav.Link></Nav.Item>
+              </Nav>
+            </Container>
+          </Navbar>
+        </Col></Row>
         {!params.rowId
           ? <List list={portfolio} sort={sort} handleSort={handleTickersSort} />
           : null
         }
         <Outlet />
-        <Row><Col><p>Footer 1</p></Col></Row>
-        {/* </header> */}
-        {/* </div> */}
+        <Row><Col>
+          <Card style={{ width: '18rem' }}>
+            <Card.Header>More info about me:</Card.Header>
+            <ListGroup variant="flush">
+              <ListGroup.Item><a href="https://charts-public.s3.amazonaws.com/Serhii-Kushchenko-CV.pdf">CV download (PDF)</a></ListGroup.Item>
+              <ListGroup.Item><a href="https://github.com/s-kust/">GitHub profile</a></ListGroup.Item>
+              <ListGroup.Item><a href="https://www.linkedin.com/in/kushchenko/">LinkedIn profile</a></ListGroup.Item>
+              <ListGroup.Item><a href="https://stackoverflow.com/users/3139228/serhii-kushchenko">Stack Overflow profile</a></ListGroup.Item>
+            </ListGroup>
+          </Card>
+        </Col></Row>
+        <Row><Col>
+          <Card className="text-center">
+            <Card.Body>
+              <Card.Text>
+                © Serhii Kushchenko, 2020-{new Date().getFullYear()}.
+              </Card.Text>
+            </Card.Body>
+          </Card>
+        </Col></Row>
       </Container>
     </PortfolioContext.Provider>
   );
@@ -174,12 +206,6 @@ const List = ({ list, sort, handleSort }) => {
                 <td>{item.note}</td>
                 <td><Link to={`${item.id}`} key={item.id}>Charts</Link></td>
               </tr>
-              // <div><Row>
-              // <Col sm="1">{item.ticker}</Col>
-              // <Col sm="1">{item.type} </Col>
-              // <Col sm="4">{item.note}</Col>
-              // <Col sm="1"><Link to={`${item.id}`} key={item.id}>Charts</Link></Col>
-              // </Row><hr /></div>
             ))}
           </tbody>
         </Table>
