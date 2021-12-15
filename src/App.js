@@ -16,6 +16,7 @@ import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+import Badge from 'react-bootstrap/Badge';
 // import { render } from '@testing-library/react';
 
 export const PortfolioContext = React.createContext();
@@ -118,7 +119,6 @@ function App() {
           <Navbar bg="light" variant="light">
             <Container>
               <Nav>
-                <Nav.Item><Nav.Link href="/">Homepage</Nav.Link></Nav.Item>
                 <Nav.Item><Nav.Link href="https://charts-public.s3.amazonaws.com/Serhii-Kushchenko-CV.pdf">CV download (PDF)</Nav.Link></Nav.Item>
                 <Nav.Item><Nav.Link href="https://github.com/s-kust/">My GitHub</Nav.Link></Nav.Item>
                 <Nav.Item><Nav.Link href="https://www.linkedin.com/in/kushchenko/">LinkedIn profile</Nav.Link></Nav.Item>
@@ -177,23 +177,31 @@ const List = ({ list, sort, handleSort }) => {
     <div>
       <Container fluid>
         <Row><Col><h1>Portfolio Tickers List</h1></Col></Row>
+        <Row><Col>
+          <Badge bg="light" text="dark">
+            Sort by:
+          </Badge>{' '}
+          <Button variant="primary" onClick={() => handleSort('TICKER')}>
+            {"Ticker "}
+            {sort.sortKey === 'TICKER' && !sort.isReverse ? (
+              <Badge bg="light"><ArrowUpIcon height="12px" width="12px" /></Badge>) : (<span></span>)}
+            {sort.sortKey === 'TICKER' && sort.isReverse ? (
+              <Badge bg="light"><ArrowDownIcon height="12px" width="12px" /></Badge>) : (<span></span>)}
+          </Button>
+          {' '}
+          <Button variant="primary" onClick={() => handleSort('TYPE')}>
+            {"Type "}
+            {sort.sortKey === 'TYPE' && !sort.isReverse ? (
+              <Badge bg="light"><ArrowUpIcon height="12px" width="12px" /></Badge>) : (<span></span>)}
+            {sort.sortKey === 'TYPE' && sort.isReverse ? (
+              <Badge bg="light"><ArrowDownIcon height="12px" width="12px" /></Badge>) : (<span></span>)}
+          </Button>
+        </Col></Row>
         <Table bordered >
           <thead>
             <tr>
-              <th><Button variant="primary" onClick={() => handleSort('TICKER')}>
-                Ticker
-                {sort.sortKey === 'TICKER' && !sort.isReverse ? (
-                  <ArrowUpIcon height="12px" width="12px" />) : (<span></span>)}
-                {sort.sortKey === 'TICKER' && sort.isReverse ? (
-                  <ArrowDownIcon height="12px" width="12px" />) : (<span></span>)}
-              </Button></th>
-              <th><Button variant="primary" onClick={() => handleSort('TYPE')}>
-                Type
-                {sort.sortKey === 'TYPE' && !sort.isReverse ? (
-                  <ArrowUpIcon height="12px" width="12px" />) : (<span></span>)}
-                {sort.sortKey === 'TYPE' && sort.isReverse ? (
-                  <ArrowDownIcon height="12px" width="12px" />) : (<span></span>)}
-              </Button></th>
+              <th>Ticker</th>
+              <th>Type</th>
               <th>Note</th>
               <th></th>
             </tr>
