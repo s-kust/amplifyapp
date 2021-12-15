@@ -4,6 +4,7 @@ import { PortfolioContext, getPortfolioRowById } from '../App';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Image from 'react-bootstrap/Image';
 
 const BUCKET_NAME = "https://charts-public.s3.amazonaws.com/"
 
@@ -22,9 +23,9 @@ export default function TickerCharts() {
     <div>
       <Container fluid>
         <Row><Col><p><Link to={"/"}>Return to the list of tickers</Link></p></Col></Row>
-        <Row><Col><img src={pathPic1} alt="" /></Col></Row>
+        <Row><Col><Image src={pathPic1} alt="" fluid /></Col></Row>
         {pathPic2
-          ? <Row><Col><img src={pathPic2} alt="" /></Col></Row>
+          ? <Row><Col><Image src={pathPic2} alt="" fluid /></Col></Row>
           : null
         }
       </Container>

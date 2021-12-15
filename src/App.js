@@ -10,6 +10,8 @@ import { useParams, Outlet, Link } from "react-router-dom";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Table from 'react-bootstrap/Table';
+import Button from 'react-bootstrap/Button';
 // import { render } from '@testing-library/react';
 
 export const PortfolioContext = React.createContext();
@@ -115,7 +117,7 @@ function App() {
           : null
         }
         <Outlet />
-        <p>Footer 13</p>
+        <Row><Col><p>Footer 1</p></Col></Row>
         {/* </header> */}
         {/* </div> */}
       </Container>
@@ -143,40 +145,44 @@ const List = ({ list, sort, handleSort }) => {
     <div>
       <Container fluid>
         <Row><Col><h1>Portfolio Tickers List</h1></Col></Row>
-        {/* <div> */}
-        <Row><Col><span style={{ width: '40%' }}>
-          <button type="button" onClick={() => handleSort('TICKER')}>
-            Ticker
-            {sort.sortKey === 'TICKER' && !sort.isReverse ? (
-              <ArrowUpIcon height="12px" width="12px" />) : (<span></span>)}
-            {sort.sortKey === 'TICKER' && sort.isReverse ? (
-              <ArrowDownIcon height="12px" width="12px" />) : (<span></span>)}
-          </button>
-        </span>
-          <span style={{ width: '30%' }}>
-            <button type="button" onClick={() => handleSort('TYPE')}>
-              Type
-              {sort.sortKey === 'TYPE' && !sort.isReverse ? (
-                <ArrowUpIcon height="12px" width="12px" />) : (<span></span>)}
-              {sort.sortKey === 'TYPE' && sort.isReverse ? (
-                <ArrowDownIcon height="12px" width="12px" />) : (<span></span>)}
-            </button>
-          </span></Col></Row>
-
-        {/* </div> */}
-
-        {sortedList.map((item) => (
-          // <Item
-          //   key={item.id}
-          //   item={item}
-          // />
-          <div className="item">
-            <span style={{ width: '15%' }}>{item.ticker} </span>
-            <span style={{ width: '20%' }}>{item.type} </span>
-            <span style={{ width: '55%' }}>{item.note} </span>
-            <span style={{ width: '10%' }}><Link to={`${item.id}`} key={item.id}>Charts</Link></span>
-          </div>
-        ))}
+        <Table bordered >
+          <thead>
+            <tr>
+              <th><Button variant="primary" onClick={() => handleSort('TICKER')}>
+                Ticker
+                {sort.sortKey === 'TICKER' && !sort.isReverse ? (
+                  <ArrowUpIcon height="12px" width="12px" />) : (<span></span>)}
+                {sort.sortKey === 'TICKER' && sort.isReverse ? (
+                  <ArrowDownIcon height="12px" width="12px" />) : (<span></span>)}
+              </Button></th>
+              <th><Button variant="primary" onClick={() => handleSort('TYPE')}>
+                Type
+                {sort.sortKey === 'TYPE' && !sort.isReverse ? (
+                  <ArrowUpIcon height="12px" width="12px" />) : (<span></span>)}
+                {sort.sortKey === 'TYPE' && sort.isReverse ? (
+                  <ArrowDownIcon height="12px" width="12px" />) : (<span></span>)}
+              </Button></th>
+              <th>Note</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedList.map((item) => (
+              <tr>
+                <td>{item.ticker}</td>
+                <td>{item.type}</td>
+                <td>{item.note}</td>
+                <td><Link to={`${item.id}`} key={item.id}>Charts</Link></td>
+              </tr>
+              // <div><Row>
+              // <Col sm="1">{item.ticker}</Col>
+              // <Col sm="1">{item.type} </Col>
+              // <Col sm="4">{item.note}</Col>
+              // <Col sm="1"><Link to={`${item.id}`} key={item.id}>Charts</Link></Col>
+              // </Row><hr /></div>
+            ))}
+          </tbody>
+        </Table>
       </Container>
     </div>
   );
