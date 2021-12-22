@@ -22,7 +22,7 @@ import Badge from 'react-bootstrap/Badge';
 export const PortfolioContext = React.createContext();
 
 const getPortfolioRows = () => {
-  const apiName = 'PortfolioRows';
+  const apiName = 'StocksBackend';
   const path = '/';
   const myInit = {
     headers: {},
@@ -35,8 +35,10 @@ const getPortfolioRows = () => {
     API: {
       endpoints: [
         {
-          name: "PortfolioRows", // name of the API in API Gateway console
-          endpoint: "https://xdjzphtw1i.execute-api.us-east-1.amazonaws.com/prod",
+          // name: "PortfolioRows", // name of the API in API Gateway console
+          // endpoint: "https://xdjzphtw1i.execute-api.us-east-1.amazonaws.com/prod",
+          name: "StocksBackend", // name of the API in API Gateway console
+          endpoint: "https://59nmqwbjy9.execute-api.us-east-1.amazonaws.com/call",
           region: "us-east-1",
           paths: ['/']
         }
@@ -45,26 +47,21 @@ const getPortfolioRows = () => {
   });
   apiCallResult = API
     .get(apiName, path, myInit).then(response => JSON.parse(response.data.body)).catch(error => {
+      console.log("Error in API call");
       console.log(error.response);
       throw new Error();
     });
   return apiCallResult;
 }
 
-const transformPortfolio = (listOfLists) => {
+const transformPortfolio = (listOfDicts) => {
   // console.log("Start function transformPortfolio");
   // console.log("Function transformPortfolio input:");
-  // console.log(listOfLists);
+  // console.log(listOfDicts);
   let resultListOfDicts = [];
-  for (var i = 0; i < listOfLists.length; i++) {
-    let portfolioItem = {
-      id: listOfLists[i][0],
-      ticker: listOfLists[i][1],
-      type: listOfLists[i][2],
-      note: listOfLists[i][3],
-      pic1: listOfLists[i][4],
-      pic2: listOfLists[i][5],
-    }
+  for (var i = 0; i < listOfDicts.length; i++) {
+    let portfolioItem = listOfDicts[i];
+    portfolioItem.id = i + 1;
     // console.log("Iteration result:");
     // console.log(portfolioItem);
     resultListOfDicts.push(portfolioItem)
@@ -159,7 +156,7 @@ function App() {
 
 const SORTS = {
   NONE: (list) => list,
-  TICKER: (list) => sortBy(list, 'ticker'),
+  TICKER: (list) => sortBy(list, 'ticker_combined'),
   TYPE: (list) => sortBy(list, 'type'),
 };
 
@@ -189,7 +186,7 @@ const List = ({ list, sort, handleSort }) => {
               <Badge bg="light"><ArrowDownIcon height="12px" width="12px" /></Badge>) : (<span></span>)}
           </Button>
           {' '}
-          <Button variant="primary" onClick={() => handleSort('TYPE')}>
+          <Button variant="primary" onClick={() => handleSort('TYPE')} className='Button-with-margin-left'>
             {"Type "}
             {sort.sortKey === 'TYPE' && !sort.isReverse ? (
               <Badge bg="light"><ArrowUpIcon height="12px" width="12px" /></Badge>) : (<span></span>)}
@@ -209,7 +206,7 @@ const List = ({ list, sort, handleSort }) => {
           <tbody>
             {sortedList.map((item) => (
               <tr>
-                <td>{item.ticker}</td>
+                <td>{item.ticker_combined}</td>
                 <td>{item.type}</td>
                 <td>{item.note}</td>
                 <td><Link to={`${item.id}`} key={item.id}>Charts</Link></td>

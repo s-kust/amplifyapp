@@ -13,10 +13,10 @@ export default function TickerCharts() {
   const value = React.useContext(PortfolioContext);
   let foundTicker = getPortfolioRowById(value, parseInt(params.rowId, 10));
   let pathPic2;
-  if (foundTicker.pic2 !== "") {
-    pathPic2 = BUCKET_NAME + foundTicker.pic2;
+  if (foundTicker.file_2 !== "") {
+    pathPic2 = BUCKET_NAME + foundTicker.file_2;
   }
-  let pathPic1 = BUCKET_NAME + foundTicker.pic1;
+  let pathPic1 = BUCKET_NAME + foundTicker.file_1;
   console.log("foundTicker");
   console.log(foundTicker);
   return (
