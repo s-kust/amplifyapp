@@ -1,4 +1,4 @@
-# Daily Portfolio Positions Reports
+# Daily Portfolio Positions Reports: Frontend
 
 The workflow is to load a list of portfolio rows from Google Spreadsheet, then for each row generate a report with charts and send it to the email. Also, you can see the recent charts online. 
 
