@@ -105,24 +105,15 @@ function App() {
       .then(result => setPortfolio(result));
   }, []);
 
-  console.log("portfolio state before return:");
-  console.log(portfolio);
+  // console.log("portfolio state before return:");
+  // console.log(portfolio);
   let params = useParams();
 
   return (
     <PortfolioContext.Provider value={portfolio}>
       <Container fluid>
         <Row><Col>
-          <Navbar bg="light" variant="light">
-            <Container>
-              <Nav>
-                <Nav.Item><Nav.Link href="https://charts-public.s3.amazonaws.com/Serhii-Kushchenko-CV.pdf">CV download (PDF)</Nav.Link></Nav.Item>
-                <Nav.Item><Nav.Link href="https://github.com/s-kust/">My GitHub</Nav.Link></Nav.Item>
-                <Nav.Item><Nav.Link href="https://www.linkedin.com/in/kushchenko/">LinkedIn profile</Nav.Link></Nav.Item>
-                <Nav.Item><Nav.Link href="https://stackoverflow.com/users/3139228/serhii-kushchenko">Stack Overflow profile</Nav.Link></Nav.Item>
-              </Nav>
-            </Container>
-          </Navbar>
+          <NavigationUpper />
         </Col></Row>
         {!params.rowId
           ? <List list={portfolio} sort={sort} handleSort={handleTickersSort} />
@@ -130,24 +121,10 @@ function App() {
         }
         <Outlet />
         <Row><Col>
-          <Card style={{ width: '18rem' }}>
-            <Card.Header>More info about me:</Card.Header>
-            <ListGroup variant="flush">
-              <ListGroup.Item><a href="https://charts-public.s3.amazonaws.com/Serhii-Kushchenko-CV.pdf">CV download (PDF)</a></ListGroup.Item>
-              <ListGroup.Item><a href="https://github.com/s-kust/">GitHub profile</a></ListGroup.Item>
-              <ListGroup.Item><a href="https://www.linkedin.com/in/kushchenko/">LinkedIn profile</a></ListGroup.Item>
-              <ListGroup.Item><a href="https://stackoverflow.com/users/3139228/serhii-kushchenko">Stack Overflow profile</a></ListGroup.Item>
-            </ListGroup>
-          </Card>
+          <NavigationLower />
         </Col></Row>
         <Row><Col>
-          <Card className="text-center">
-            <Card.Body>
-              <Card.Text>
-                © Serhii Kushchenko, 2020-{new Date().getFullYear()}.
-              </Card.Text>
-            </Card.Body>
-          </Card>
+          <FooterCard />
         </Col></Row>
       </Container>
     </PortfolioContext.Provider>
@@ -219,5 +196,45 @@ const List = ({ list, sort, handleSort }) => {
   );
 };
 
+const FooterCard = () => {
+  return (
+    <Card className="text-center">
+      <Card.Body>
+        <Card.Text>
+          © Serhii Kushchenko, 2020-{new Date().getFullYear()}.
+        </Card.Text>
+      </Card.Body>
+    </Card>
+  )
+}
+
+const NavigationLower = () => {
+  return (
+    <Card style={{ width: '18rem' }}>
+      <Card.Header>More info about me:</Card.Header>
+      <ListGroup variant="flush">
+        <ListGroup.Item><a href="https://charts-public.s3.amazonaws.com/Serhii-Kushchenko-CV.pdf">CV download (PDF)</a></ListGroup.Item>
+        <ListGroup.Item><a href="https://github.com/s-kust/">GitHub profile</a></ListGroup.Item>
+        <ListGroup.Item><a href="https://www.linkedin.com/in/kushchenko/">LinkedIn profile</a></ListGroup.Item>
+        <ListGroup.Item><a href="https://stackoverflow.com/users/3139228/serhii-kushchenko">Stack Overflow profile</a></ListGroup.Item>
+      </ListGroup>
+    </Card>
+  )
+}
+
+const NavigationUpper = () => {
+  return (
+    <Navbar bg="light" variant="light">
+      <Container>
+        <Nav>
+          <Nav.Item><Nav.Link href="https://charts-public.s3.amazonaws.com/Serhii-Kushchenko-CV.pdf">CV download (PDF)</Nav.Link></Nav.Item>
+          <Nav.Item><Nav.Link href="https://github.com/s-kust/">My GitHub</Nav.Link></Nav.Item>
+          <Nav.Item><Nav.Link href="https://www.linkedin.com/in/kushchenko/">LinkedIn profile</Nav.Link></Nav.Item>
+          <Nav.Item><Nav.Link href="https://stackoverflow.com/users/3139228/serhii-kushchenko">Stack Overflow profile</Nav.Link></Nav.Item>
+        </Nav>
+      </Container>
+    </Navbar>
+  )
+}
 
 export default App;
