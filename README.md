@@ -2,7 +2,7 @@
 
 The workflow is to load a list of portfolio rows from Google Spreadsheet, then for each row generate a report with charts and send it to the email. Also, you can see the recent charts online. 
 
-![frontend screenshot](/misc/frontend-screen.PNG)
+![frontend screenshot](/misc/frontend-screen.png)
 
 The advantage of the system is that you can easily change the set of items in the watchlist. To do that, you only need a smartphone that works with Google Sheets. 
 
