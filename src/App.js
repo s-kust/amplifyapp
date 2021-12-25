@@ -94,9 +94,10 @@ function App() {
   });
 
   const handleTickersSort = (sortKey) => {
+    console.log("handleTickersSort function call: ", sortKey);
     const isReverse = sort.sortKey === sortKey && !sort.isReverse;
-
     setSort({ sortKey, isReverse });
+    console.log("sort.sortKey", sort.sortKey);
   };
 
   React.useEffect(() => {
@@ -155,21 +156,9 @@ const List = ({ list, sort, handleSort }) => {
           <Badge bg="light" text="dark">
             Sort by:
           </Badge>{' '}
-          <Button variant="primary" onClick={() => handleSort('TICKER')}>
-            {"Ticker "}
-            {sort.sortKey === 'TICKER' && !sort.isReverse ? (
-              <Badge bg="light"><ArrowUpIcon height="12px" width="12px" /></Badge>) : (<span></span>)}
-            {sort.sortKey === 'TICKER' && sort.isReverse ? (
-              <Badge bg="light"><ArrowDownIcon height="12px" width="12px" /></Badge>) : (<span></span>)}
-          </Button>
+          <SortButton sort={sort} handleSort={handleSort} sortKeyId={"TICKER"} sortText={"Ticker"} />
           {' '}
-          <Button variant="primary" onClick={() => handleSort('TYPE')} className='Button-with-margin-left'>
-            {"Type "}
-            {sort.sortKey === 'TYPE' && !sort.isReverse ? (
-              <Badge bg="light"><ArrowUpIcon height="12px" width="12px" /></Badge>) : (<span></span>)}
-            {sort.sortKey === 'TYPE' && sort.isReverse ? (
-              <Badge bg="light"><ArrowDownIcon height="12px" width="12px" /></Badge>) : (<span></span>)}
-          </Button>
+          <SortButton sort={sort} handleSort={handleSort} sortKeyId={"TYPE"} sortText={"Type"} />
         </Col></Row>
         <Table bordered >
           <thead>
@@ -234,6 +223,18 @@ const NavigationUpper = () => {
         </Nav>
       </Container>
     </Navbar>
+  )
+}
+
+const SortButton = ({ sort, handleSort, sortKeyId, sortText }) => {
+  return (
+    <Button variant="primary" onClick={() => handleSort(sortKeyId)}>
+      {sortText + " "}
+      {sort.sortKey === sortKeyId && !sort.isReverse ? (
+        <Badge bg="light"><ArrowUpIcon height="12px" width="12px" /></Badge>) : (<span></span>)}
+      {sort.sortKey === sortKeyId && sort.isReverse ? (
+        <Badge bg="light"><ArrowDownIcon height="12px" width="12px" /></Badge>) : (<span></span>)}
+    </Button>
   )
 }
 
