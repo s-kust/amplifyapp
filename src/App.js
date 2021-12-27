@@ -3,7 +3,7 @@ import { sortBy } from 'lodash';
 import './App.css';
 // import { Authenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
-import Amplify, { API } from 'aws-amplify';
+// import Amplify, { API } from 'aws-amplify';
 import { ReactComponent as ArrowUpIcon } from './up-arrow.svg';
 import { ReactComponent as ArrowDownIcon } from './down-arrow.svg';
 import { useParams, Outlet, Link } from "react-router-dom";
@@ -17,40 +17,52 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Badge from 'react-bootstrap/Badge';
+import axios from 'axios';
 // import { render } from '@testing-library/react';
 
 export const PortfolioContext = React.createContext();
 
-const getPortfolioRows = () => {
-  const apiName = 'StocksBackend';
-  const path = '/';
-  const myInit = {
-    headers: {},
-    response: true,
-    queryStringParameters: {},
-  };
-  var apiCallResult;
-  Amplify.configure({
-    Auth: {},
-    API: {
-      endpoints: [
-        {
-          // name: "PortfolioRows", // name of the API in API Gateway console
-          // endpoint: "https://xdjzphtw1i.execute-api.us-east-1.amazonaws.com/prod",
-          name: "StocksBackend", // name of the API in API Gateway console
-          endpoint: "https://59nmqwbjy9.execute-api.us-east-1.amazonaws.com/call",
-          region: "us-east-1",
-          paths: ['/']
-        }
-      ]
-    }
-  });
-  apiCallResult = API
-    .get(apiName, path, myInit).then(response => JSON.parse(response.data.body)).catch(error => {
-      console.log("Error in API call");
+// const getPortfolioRows = () => {
+//   const apiName = 'StocksBackend';
+//   const path = '/';
+//   const myInit = {
+//     headers: {},
+//     response: true,
+//     queryStringParameters: {},
+//   };
+//   var apiCallResult;
+//   Amplify.configure({
+//     Auth: {},
+//     API: {
+//       endpoints: [
+//         {
+//           name: "StocksBackend", 
+//           endpoint: "https://7lanoji6ji.execute-api.us-east-1.amazonaws.com/call",
+//           region: "us-east-1",
+//           paths: ['/']
+//         }
+//       ]
+//     }
+//   });
+//   apiCallResult = API
+//     .get(apiName, path, myInit).then(response => JSON.parse(response.data)).catch(error => {
+//       console.log("Error in API call");
+//       console.log(error.response);
+//       throw new Error();
+//     });
+//   return apiCallResult;
+// }
+
+const getPortfolioRows2 = () => {
+  let apiCallResult = axios.get('https://rptfu3j0qi.execute-api.us-east-1.amazonaws.com/call')
+    .then(response => JSON.parse(response.data.body))
+    .catch(error => {
+      console.log("Error in API call - 2");
       console.log(error.response);
       throw new Error();
     });
+  // console.log("apiCallResult: ");
+  // console.log(apiCallResult);
   return apiCallResult;
 }
 
@@ -94,14 +106,14 @@ function App() {
   });
 
   const handleTickersSort = (sortKey) => {
-    console.log("handleTickersSort function call: ", sortKey);
+    // console.log("handleTickersSort function call: ", sortKey);
     const isReverse = sort.sortKey === sortKey && !sort.isReverse;
     setSort({ sortKey, isReverse });
-    console.log("sort.sortKey", sort.sortKey);
+    // console.log("sort.sortKey", sort.sortKey);
   };
 
   React.useEffect(() => {
-    getPortfolioRows()
+    getPortfolioRows2()
       .then(result => transformPortfolio(result))
       .then(result => setPortfolio(result));
   }, []);
