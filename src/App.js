@@ -1,5 +1,5 @@
 import React from 'react';
-import { sortBy } from 'lodash';
+import { concat, sortBy } from 'lodash';
 import './App.css';
 // import { Authenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
@@ -19,42 +19,13 @@ import Navbar from 'react-bootstrap/Navbar';
 import Badge from 'react-bootstrap/Badge';
 import axios from 'axios';
 // import { render } from '@testing-library/react';
+// import SecretsManager from './SecretsManager.js';
+import getApiUrl from "./getApiUrl";
 
 export const PortfolioContext = React.createContext();
 
-// const getPortfolioRows = () => {
-//   const apiName = 'StocksBackend';
-//   const path = '/';
-//   const myInit = {
-//     headers: {},
-//     response: true,
-//     queryStringParameters: {},
-//   };
-//   var apiCallResult;
-//   Amplify.configure({
-//     Auth: {},
-//     API: {
-//       endpoints: [
-//         {
-//           name: "StocksBackend", 
-//           endpoint: "https://7lanoji6ji.execute-api.us-east-1.amazonaws.com/call",
-//           region: "us-east-1",
-//           paths: ['/']
-//         }
-//       ]
-//     }
-//   });
-//   apiCallResult = API
-//     .get(apiName, path, myInit).then(response => JSON.parse(response.data)).catch(error => {
-//       console.log("Error in API call");
-//       console.log(error.response);
-//       throw new Error();
-//     });
-//   return apiCallResult;
-// }
-
-const getPortfolioRows2 = () => {
-  let apiCallResult = axios.get('https://rptfu3j0qi.execute-api.us-east-1.amazonaws.com/call')
+const getPortfolioRows = (apiURL) => {
+  let apiCallResult = axios.get(apiURL)
     .then(response => JSON.parse(response.data.body))
     .catch(error => {
       console.log("Error in API call - 2");
@@ -113,7 +84,8 @@ function App() {
   };
 
   React.useEffect(() => {
-    getPortfolioRows2()
+    getApiUrl()
+      .then(result => getPortfolioRows(result))
       .then(result => transformPortfolio(result))
       .then(result => setPortfolio(result));
   }, []);
